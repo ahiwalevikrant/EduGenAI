@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --jira-primary: #0052CC;
+    --jira-bg: #F4F5F7;
+    --jira-surface: #FFFFFF;
+    --jira-text: #172B4D;
+    --jira-subtext: #5E6C84;
+    --jira-border: #DFE1E6;
+  }
+
+  .dark {
+    --jira-primary: #388BFD;
+    --jira-bg: #0B0E14;
+    --jira-surface: #161B22;
+    --jira-text: #F0F6FC;
+    --jira-subtext: #8B949E;
+    --jira-border: #30363D;
+  }
+
+  body {
+    background-color: var(--jira-bg);
+    color: var(--jira-text);
+    font-size: 15px;
+    line-height: 1.5;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Noto Sans', 'Ubuntu', 'Fira Sans', 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+  }
+}
+
+/* Jira Style Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #C1C7D0;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #A5ADBA;
+}
+
+/* Print Stylesheet for Authentic Board Question Papers & Answer Keys */
+@media print {
+  body {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    font-size: 12pt;
+    line-height: 1.4;
+  }
+
+  header, aside, nav, .print\:hidden {
+    display: none !important;
+  }
+
+  main {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+  }
+
+  #printable-paper {
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
