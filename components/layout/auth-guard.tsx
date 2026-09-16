@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Sparkles, Sun, Moon, ShieldCheck } from 'lucide-react';
@@ -10,6 +10,7 @@ import LoginPage from '../../app/login/page';
 import SignupPage from '../../app/signup/page';
 import { JiraTopbar } from './jira-topbar';
 import { JiraSidebar } from './jira-sidebar';
+import { NavigationLoader } from './navigation-loader';
 
 export function AuthGuard({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -17,6 +18,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
   const { theme, toggleTheme } = useSettingsStore();
 
   const isSignup = pathname === '/signup';
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   // Minimal Standalone Auth Shell for unauthenticated visitors
   const renderAuthShell = (content: React.ReactNode) => (
@@ -92,12 +94,13 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
   // Authenticated user gets full Workspace UI (Topbar + Sidebar + Main Canvas with 0px gap)
   return (
     <div className="flex flex-col h-screen overflow-hidden bg-[#f6f5f4] dark:bg-[#0a1530]">
+      <NavigationLoader />
       {/* Top Navigation Bar - Flush 0px Gap */}
-      <JiraTopbar />
+      <JiraTopbar onOpenMobileNav={() => setMobileNavOpen(true)} />
 
       <div className="flex flex-1 overflow-hidden min-h-0">
         {/* Sidebar Navigation - Sticky and Flush */}
-        <JiraSidebar />
+        <JiraSidebar mobileOpen={mobileNavOpen} onCloseMobile={() => setMobileNavOpen(false)} />
 
         {/* Main Application Content Stage */}
         <main className="flex-1 overflow-y-auto p-4 sm:p-5 md:p-6 bg-[#f6f5f4] dark:bg-[#0a1530] min-w-0">

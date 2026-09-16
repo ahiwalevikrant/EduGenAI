@@ -7,7 +7,6 @@ import {
   Sparkles, 
   ArrowRight, 
   ShieldCheck, 
-  Key, 
   Mail, 
   Lock, 
   GraduationCap, 
@@ -18,7 +17,7 @@ import { useAuthStore } from '../../store/use-auth-store';
 
 export default function LoginPage() {
   const router = useRouter();
-  const { login, demoLogin, isAuthenticated } = useAuthStore();
+  const { login } = useAuthStore();
   const [username, setUsername] = useState('admin');
   const [password, setPassword] = useState('admin');
   const [loading, setLoading] = useState(false);
@@ -42,11 +41,6 @@ export default function LoginPage() {
     }
   };
 
-  const handleDemoLogin = () => {
-    demoLogin();
-    router.push('/');
-  };
-
   return (
     <div className="min-h-[calc(100vh-8rem)] flex items-center justify-center p-4">
       <div className="w-full max-w-md space-y-6">
@@ -61,26 +55,6 @@ export default function LoginPage() {
           <p className="text-sm text-[#5d5b54] dark:text-[#a4a097]">
             Curriculum-grounded AI teaching workspace for educators
           </p>
-        </div>
-
-        {/* Quick Demo 1-Click Login Card */}
-        <div className="bg-[#fef7d6] dark:bg-[#1a2a52] border border-[#f9e79f] dark:border-[#243769] rounded-lg p-4 space-y-3">
-          <div className="flex items-center space-x-2 text-xs font-bold text-[#dd5b00] dark:text-[#f5d75e] uppercase tracking-wider">
-            <Key className="w-4 h-4" />
-            <span>1-Click Demo Credentials</span>
-          </div>
-          <div className="text-xs text-[#37352f] dark:text-[#f6f5f4] flex flex-wrap items-center justify-between gap-2">
-            <span>Username: <strong className="font-mono bg-white/80 dark:bg-black/30 px-1.5 py-0.5 rounded text-[#1a1a1a] dark:text-white">admin</strong></span>
-            <span>Password: <strong className="font-mono bg-white/80 dark:bg-black/30 px-1.5 py-0.5 rounded text-[#1a1a1a] dark:text-white">admin</strong></span>
-          </div>
-          <button
-            type="button"
-            onClick={handleDemoLogin}
-            className="w-full bg-[#5645d4] hover:bg-[#4534b3] text-white font-medium text-sm py-2 px-4 rounded-md transition-colors flex items-center justify-center space-x-2 shadow-sm cursor-pointer"
-          >
-            <Sparkles className="w-4 h-4" />
-            <span>Log In as Demo Admin (admin / admin)</span>
-          </button>
         </div>
 
         {/* Main Login Form Card */}
