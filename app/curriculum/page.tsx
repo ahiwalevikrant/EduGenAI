@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { 
   BookOpen, 
   Search, 
@@ -16,6 +16,7 @@ import {
   Calendar
 } from 'lucide-react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { useCurriculumStore } from '../../store/use-curriculum-store';
 import { CurriculumService } from '../../services/curriculum/curriculum-service';
 import { CurriculumSelector } from '../../components/curriculum/curriculum-selector';
@@ -23,6 +24,12 @@ import { ChapterPreviewCard } from '../../components/curriculum/chapter-preview-
 
 export default function CurriculumPage() {
   const { selectedChapter, selectChapter, searchQuery, setSearchQuery, boardId, classGrade, subjectId, academicYear } = useCurriculumStore();
+  const searchParams = useSearchParams();
+  const topbarSearch = searchParams.get('search') || '';
+
+  useEffect(() => {
+    if (topbarSearch && topbarSearch !== searchQuery) setSearchQuery(topbarSearch);
+  }, [topbarSearch, searchQuery, setSearchQuery]);
   const allChapters = CurriculumService.getAllChapters();
 
   const filteredChapters = searchQuery.trim() 
