@@ -14,6 +14,21 @@ export class GeminiProvider implements AIProvider {
     return `${base}/models/${model}:${action}?key=${this.config.apiKey.trim()}`;
   }
 
+  async listModels(): Promise<string[]> {
+    if (!this.config.apiKey?.trim()) throw new Error('Google Gemini API key is missing.');
+
+    const base = this.config.baseUrl?.trim() || 'https://generativelanguage.googleapis.com/v1beta';
+    const response = await fetch(`${base}/models?key=${this.config.apiKey.trim()}`);
+    if (!response.ok) throw new Error(`Gemini model list error (${response.status}): ${await response.text()}`);
+
+    const payload = await response.json();
+    return (Array.isArray(payload.models) ? payload.models : [])
+      .filter((model: any) => model?.supportedGenerationMethods?.includes('generateContent'))
+      .map((model: any) => String(model.name || '').replace(/^models\//, ''))
+      .filter(Boolean)
+      .sort((a: string, b: string) => a.localeCompare(b));
+  }
+
   async testConnection(): Promise<ConnectionTestResult> {
     const start = Date.now();
     try {

@@ -21,6 +21,32 @@ export class OpenRouterProvider implements AIProvider {
     };
   }
 
+  async listModels(): Promise<string[]> {
+    if (!this.config.apiKey?.trim()) {
+      throw new Error('OpenRouter API key is missing.');
+    }
+
+    const modelsEndpoint = this.getEndpoint().replace(/\/chat\/completions\/?$/, '/models');
+    const response = await fetch(modelsEndpoint, { headers: this.getHeaders() });
+
+    if (!response.ok) {
+      throw new Error(`OpenRouter model list error (${response.status}): ${await response.text()}`);
+    }
+
+    const payload = await response.json();
+    const models = Array.isArray(payload.data) ? payload.data : [];
+
+    return models
+      .filter((model: any) => typeof model?.id === 'string')
+      .sort((a: any, b: any) => {
+        const aIsFree = a.id.endsWith(':free') || (Number(a.pricing?.prompt) === 0 && Number(a.pricing?.completion) === 0);
+        const bIsFree = b.id.endsWith(':free') || (Number(b.pricing?.prompt) === 0 && Number(b.pricing?.completion) === 0);
+        if (aIsFree !== bIsFree) return aIsFree ? -1 : 1;
+        return a.id.localeCompare(b.id);
+      })
+      .map((model: any) => model.id);
+  }
+
   async testConnection(): Promise<ConnectionTestResult> {
     const start = Date.now();
     try {

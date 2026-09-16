@@ -27,6 +27,21 @@ export class OpenAIProvider implements AIProvider {
     return headers;
   }
 
+  async listModels(): Promise<string[]> {
+    if (!this.config.apiKey?.trim()) throw new Error('API key is missing.');
+
+    const response = await fetch(this.getEndpoint().replace(/\/chat\/completions\/?$/, '/models'), {
+      headers: this.getHeaders()
+    });
+    if (!response.ok) throw new Error(`Model list error (${response.status}): ${await response.text()}`);
+
+    const payload = await response.json();
+    return (Array.isArray(payload.data) ? payload.data : [])
+      .map((model: any) => model?.id)
+      .filter((id: unknown): id is string => typeof id === 'string')
+      .sort((a: string, b: string) => a.localeCompare(b));
+  }
+
   async testConnection(): Promise<ConnectionTestResult> {
     const start = Date.now();
     try {
