@@ -45,7 +45,7 @@ export default function PPTStudioPage() {
       return;
     }
 
-    if (!activeProviderConfig?.apiKey?.trim() && activeProviderConfig.type !== 'custom') {
+    if (!activeProviderConfig?.apiKey?.trim()) {
       setErrorMessage(`Please configure an API Key for ${activeProviderConfig.name} in Settings before generating.`);
       return;
     }

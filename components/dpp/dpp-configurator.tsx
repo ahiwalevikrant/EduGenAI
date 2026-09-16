@@ -192,7 +192,7 @@ export function DPPConfigurator({
               5. Cognitive Difficulty Gradient
             </label>
             <div className="grid grid-cols-4 gap-1.5">
-              {(['easy', 'medium', 'hard', 'mixed'] as DPPDifficulty[]).map((diff) => (
+              {(['foundation', 'moderate', 'advanced', 'progressive'] as DPPDifficulty[]).map((diff) => (
                 <button
                   key={diff}
                   type="button"
@@ -208,7 +208,7 @@ export function DPPConfigurator({
               ))}
             </div>
             <p className="text-[11px] text-[#787671] dark:text-[#a4a097] mt-1.5">
-              {config.difficulty === 'mixed' ? 'Gradual progression from foundational to HOTS questions.' : `${config.difficulty} difficulty standard.`}
+              {config.difficulty === 'progressive' ? 'Gradual progression from foundational to HOTS questions.' : `${config.difficulty} difficulty standard.`}
             </p>
           </div>
 

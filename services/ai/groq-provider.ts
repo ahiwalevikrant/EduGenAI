@@ -1,5 +1,5 @@
 import { AIProvider, AIProviderConfig, ConnectionTestResult, GenerationOptions } from './ai-provider.interface';
-import { cleanJsonString } from './json-cleaner';
+import { JsonCleaner } from './json-cleaner';
 
 export class GroqProvider implements AIProvider {
   readonly config: AIProviderConfig;
@@ -117,11 +117,6 @@ export class GroqProvider implements AIProvider {
       systemPrompt: (options?.systemPrompt || '') + '\nYou MUST respond ONLY with valid JSON conforming to the requested schema. Do not output markdown code blocks or explanations.'
     });
 
-    const cleaned = cleanJsonString(raw);
-    try {
-      return JSON.parse(cleaned) as T;
-    } catch (e: any) {
-      throw new Error(`Failed to parse Groq JSON output: ${e.message}\nRaw content preview: ${raw.slice(0, 300)}...`);
-    }
+    return JsonCleaner.cleanAndParse<T>(raw);
   }
 }

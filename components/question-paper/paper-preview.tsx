@@ -159,10 +159,10 @@ export function PaperPreviewView({ paper: initialPaper, onGenerateAnswerKey }: P
               {/* Section Header */}
               <div className="text-center border-b border-[#e5e3df] dark:border-[#243769] pb-2">
                 <h3 className="font-bold text-sm sm:text-base text-[#1a1a1a] dark:text-[#f6f5f4] uppercase tracking-wider">
-                  {section.sectionName}
+                  {section.name}
                 </h3>
                 <p className="text-xs text-[#5d5b54] dark:text-[#a4a097] italic mt-0.5">
-                  {section.description} ({section.totalQuestions} Questions • {section.sectionMarks} Marks)
+                  {section.description} ({section.questionCount} Questions • {section.totalMarks} Marks)
                 </p>
               </div>
 
@@ -212,7 +212,7 @@ export function PaperPreviewView({ paper: initialPaper, onGenerateAnswerKey }: P
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pl-7 pt-1 text-xs sm:text-sm text-[#37352f] dark:text-[#a4a097]">
                         {q.options.map((opt, oIdx) => (
                           <div key={oIdx} className="font-medium">
-                            {opt}
+                            {opt.key}. {opt.text}
                           </div>
                         ))}
                       </div>

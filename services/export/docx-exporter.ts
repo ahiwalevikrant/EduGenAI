@@ -2,6 +2,35 @@ import { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType, Bord
 import { GeneratedQuestionPaper } from '../question-paper/types';
 import { GeneratedAnswerKey } from '../answer-key/types';
 
+/** Lightweight worksheet export used by the Daily Practice Plan preview. */
+export async function exportDocxFile(content: any, fileName: string): Promise<void> {
+  const header = content?.header || {};
+  const sections = Array.isArray(content?.sections) ? content.sections : [];
+  const children: Paragraph[] = [
+    new Paragraph({ text: header.schoolName || 'EduGen AI Worksheet', heading: HeadingLevel.HEADING_1, alignment: AlignmentType.CENTER }),
+    new Paragraph({ text: header.examName || 'Practice Worksheet', heading: HeadingLevel.HEADING_2, alignment: AlignmentType.CENTER }),
+    new Paragraph({ text: `Class: ${header.classGrade || ''} | Subject: ${header.subject || ''} | Marks: ${header.maximumMarks || ''}` }),
+    new Paragraph({ text: 'Instructions:', heading: HeadingLevel.HEADING_2 }),
+    ...(header.generalInstructions || []).map((instruction: string, index: number) => new Paragraph({ text: `${index + 1}. ${instruction}` })),
+  ];
+
+  sections.forEach((section: any) => {
+    children.push(new Paragraph({ text: section.sectionName || 'Questions', heading: HeadingLevel.HEADING_2 }));
+    (section.questions || []).forEach((question: any) => {
+      children.push(new Paragraph({ text: `Q${question.questionNumber}. ${question.text} [${question.marks} Marks]` }));
+      (question.options || []).forEach((option: string) => children.push(new Paragraph({ text: `   ${option}` })));
+    });
+  });
+
+  const blob = await Packer.toBlob(new Document({ sections: [{ properties: {}, children }] }));
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement('a');
+  anchor.href = url;
+  anchor.download = fileName;
+  anchor.click();
+  URL.revokeObjectURL(url);
+}
+
 export class DocxExporter {
   /**
    * Export Question Paper as formatted MS Word (.docx) document
@@ -71,7 +100,7 @@ export class DocxExporter {
                     children: [
                       new TextRun({ text: `Q${q.qNumber}. `, bold: true }),
                       new TextRun({ text: q.questionText }),
-                      new TextRun({ text: `  [${q.marks} Mark${q.marks > 1 ? 's' : ''}]`, bold: true, italic: true }),
+                      new TextRun({ text: `  [${q.marks} Mark${q.marks > 1 ? 's' : ''}]`, bold: true, italics: true }),
                     ],
                     spacing: { before: 100, after: 60 }
                   })
@@ -97,7 +126,7 @@ export class DocxExporter {
 
                 if (q.caseScenario) {
                   questionParagraphs.push(
-                    new Paragraph({ text: `   Case Study: ${q.caseScenario}`, italic: true, spacing: { after: 60 } })
+                    new Paragraph({ children: [new TextRun({ text: `   Case Study: ${q.caseScenario}`, italics: true })], spacing: { after: 60 } })
                   );
                 }
 
@@ -144,7 +173,7 @@ export class DocxExporter {
               new Paragraph({
                 children: [
                   new TextRun({ text: `Q${item.qNumber}. [${item.marks} Mark${item.marks > 1 ? 's' : ''}] `, bold: true }),
-                  new TextRun({ text: item.questionText, italic: true }),
+                  new TextRun({ text: item.questionText, italics: true }),
                 ],
                 spacing: { before: 180, after: 60 }
               }),
@@ -165,7 +194,7 @@ export class DocxExporter {
               new Paragraph({
                 children: [
                   new TextRun({ text: 'Marking Criteria: ', bold: true }),
-                  new TextRun({ text: item.markingCriteria, italic: true }),
+                  new TextRun({ text: item.markingCriteria, italics: true }),
                 ],
                 spacing: { after: 120 }
               })

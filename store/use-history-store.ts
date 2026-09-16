@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { GeneratedQuestionPaper } from '../services/question-paper/types';
-import { GeneratedAnswerKey } from '../answer-key/types';
+import { GeneratedAnswerKey } from '../services/answer-key/types';
 import { PPTDeck } from '../services/ppt/types';
 
 export interface HistoryState {

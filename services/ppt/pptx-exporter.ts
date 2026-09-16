@@ -83,7 +83,7 @@ export class PPTXExporter {
         options: {
           fontSize: 15,
           color: theme.text,
-          bullet: { type: 'bullet', color: theme.accent },
+          bullet: { type: 'bullet' as const, color: theme.accent },
           spaceAfter: 10,
           fontFace: 'Arial'
         }

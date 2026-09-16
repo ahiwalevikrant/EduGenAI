@@ -14,7 +14,6 @@ import {
 import Link from 'next/link';
 import { useCurriculumStore } from '../../../store/use-curriculum-store';
 import { useSettingsStore } from '../../../store/use-settings-store';
-import { useHistoryStore } from '../../../store/use-history-store';
 import { CurriculumSelector } from '../../../components/curriculum/curriculum-selector';
 import { DPPConfigurator } from '../../../components/dpp/dpp-configurator';
 import { DPPPreview } from '../../../components/dpp/dpp-preview';
@@ -36,7 +35,6 @@ const DEFAULT_DPP_CONFIG: DPPConfig = {
 export default function DPPGeneratePage() {
   const { selectedChapter } = useCurriculumStore();
   const { activeProvider } = useSettingsStore();
-  const { addEntry } = useHistoryStore();
 
   const [config, setConfig] = useState<DPPConfig>(DEFAULT_DPP_CONFIG);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -61,19 +59,6 @@ export default function DPPGeneratePage() {
 
       setGeneratedPlan(plan);
 
-      // Add to repository history
-      addEntry({
-        type: 'question-paper', // stored in history
-        title: plan.title,
-        chapterId: selectedChapter.id,
-        chapterTitle: selectedChapter.title,
-        chapterCode: selectedChapter.code,
-        boardId: selectedChapter.boardId,
-        classGrade: selectedChapter.classGrade,
-        subjectId: selectedChapter.subjectId,
-        academicYear: selectedChapter.academicYear,
-        data: plan
-      });
     } catch (err: any) {
       console.error('DPP generation failed:', err);
       alert(`Error generating DPP: ${err.message || 'Check your AI API key in Settings.'}`);
