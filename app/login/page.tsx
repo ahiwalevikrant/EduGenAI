@@ -18,8 +18,8 @@ import { useAuthStore } from '../../store/use-auth-store';
 export default function LoginPage() {
   const router = useRouter();
   const { login } = useAuthStore();
-  const [username, setUsername] = useState('admin');
-  const [password, setPassword] = useState('admin');
+  const [username, setUsername] = useState('Vikrant');
+  const [password, setPassword] = useState('Virupti@710');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
