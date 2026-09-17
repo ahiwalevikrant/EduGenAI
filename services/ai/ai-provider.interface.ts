@@ -38,6 +38,7 @@ export interface ConnectionTestResult {
 export interface AIProvider {
   readonly config: AIProviderConfig;
   testConnection(): Promise<ConnectionTestResult>;
+  listModels(): Promise<string[]>;
   generate(prompt: string, options?: GenerationOptions): Promise<string>;
   streamGenerate(
     prompt: string, 

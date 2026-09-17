@@ -54,15 +54,29 @@ export function AIProviderCard({ provider, isDefault, onUpdate, onSetDefault, on
 
     try {
       const adapter = AIService.createProvider(tempConfig);
-      const res = await adapter.testConnection();
+      const availableModels = await adapter.listModels();
+      if (!availableModels.length) {
+        throw new Error('No models are available for this API key.');
+      }
+
+      // A saved model can disappear from a provider's catalogue. In that case,
+      // validate with the first available model (free models are sorted first).
+      const modelToTest = availableModels.includes(tempConfig.defaultModel)
+        ? tempConfig.defaultModel
+        : availableModels[0];
+      const res = await AIService.createProvider({ ...tempConfig, defaultModel: modelToTest }).testConnection();
       setTestResult(res);
       onUpdate({
         apiKey: apiKey.trim(),
         baseUrl: baseUrl.trim(),
-        defaultModel: defaultModel.trim(),
+        defaultModel: modelToTest,
+        availableModels,
         lastStatus: res.success ? 'connected' : 'error',
         lastTestedAt: new Date().toISOString()
       });
+      if (res.success && modelToTest !== defaultModel) {
+        setDefaultModel(modelToTest);
+      }
     } catch (err: any) {
       setTestResult({
         success: false,

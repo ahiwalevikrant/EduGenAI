@@ -12,6 +12,27 @@ export class GroqProvider implements AIProvider {
     return this.config.baseUrl || 'https://api.groq.com/openai/v1';
   }
 
+  async listModels(): Promise<string[]> {
+    if (!this.config.apiKey?.trim()) {
+      throw new Error('Groq API key is missing.');
+    }
+
+    const response = await fetch(`${this.getBaseUrl().replace(/\/$/, '')}/models`, {
+      headers: { 'Authorization': `Bearer ${this.config.apiKey.trim()}` }
+    });
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      throw new Error(`Groq model list error (${response.status}): ${error.error?.message || response.statusText}`);
+    }
+
+    const payload = await response.json();
+    return (Array.isArray(payload.data) ? payload.data : [])
+      .map((model: any) => model?.id)
+      .filter((id: unknown): id is string => typeof id === 'string')
+      .sort((a: string, b: string) => a.localeCompare(b));
+  }
+
   async testConnection(): Promise<ConnectionTestResult> {
     const start = Date.now();
     try {
