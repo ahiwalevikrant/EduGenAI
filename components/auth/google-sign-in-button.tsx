@@ -47,7 +47,7 @@ function decodeCredential(credential: string): GoogleUserProfile | null {
 export function GoogleSignInButton({ onSuccess, onError }: GoogleSignInButtonProps) {
   const buttonRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const clientId = process.env.GOOGLE_CLIENT_ID;
+  const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
 
   useEffect(() => {
     if (!clientId) {
