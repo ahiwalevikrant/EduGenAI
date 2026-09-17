@@ -15,10 +15,11 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { useAuthStore } from '../../store/use-auth-store';
+import { GoogleSignInButton } from '../../components/auth/google-sign-in-button';
 
 export default function SignupPage() {
   const router = useRouter();
-  const { signup } = useAuthStore();
+  const { signup, signInWithGoogle } = useAuthStore();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [school, setSchool] = useState('');
@@ -146,6 +147,21 @@ export default function SignupPage() {
               <span>{loading ? 'Creating account...' : 'Create Free Account'}</span>
             </button>
           </form>
+
+          <div className="flex items-center gap-3 text-xs text-[#787671] dark:text-[#a4a097]">
+            <div className="h-px flex-1 bg-[#e5e3df] dark:bg-[#243769]" />
+            <span>OR</span>
+            <div className="h-px flex-1 bg-[#e5e3df] dark:bg-[#243769]" />
+          </div>
+
+          <GoogleSignInButton
+            onSuccess={(profile) => {
+              setError(null);
+              signInWithGoogle(profile);
+              router.push('/');
+            }}
+            onError={setError}
+          />
 
           <div className="pt-4 border-t border-[#e5e3df] dark:border-[#243769] text-center text-xs text-[#5d5b54] dark:text-[#a4a097]">
             Already have an educator account?{' '}
