@@ -12,6 +12,13 @@ export interface UserProfile {
   initials: string;
 }
 
+export interface GoogleUserProfile {
+  sub: string;
+  name?: string;
+  email: string;
+  picture?: string;
+}
+
 const DEMO_ADMIN_USER: UserProfile = {
   id: 'usr_admin_01',
   name: 'Admin Educator',
@@ -135,6 +142,26 @@ export function useAuthStore() {
     return true;
   };
 
+  const signInWithGoogle = (googleUser: GoogleUserProfile) => {
+    const name = googleUser.name?.trim() || googleUser.email.split('@')[0] || 'Educator';
+    const initials = name
+      .split(' ')
+      .map(word => word[0])
+      .join('')
+      .slice(0, 2)
+      .toUpperCase() || 'ED';
+
+    saveState({
+      id: `google_${googleUser.sub}`,
+      name,
+      email: googleUser.email,
+      role: 'Faculty Educator',
+      school: 'Google-connected educator account',
+      avatarUrl: googleUser.picture,
+      initials
+    }, true);
+  };
+
   const logout = () => {
     saveState(null, false);
   };
@@ -146,6 +173,7 @@ export function useAuthStore() {
     login,
     demoLogin,
     signup,
+    signInWithGoogle,
     logout
   };
 }
